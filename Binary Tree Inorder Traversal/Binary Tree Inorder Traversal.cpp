@@ -1,31 +1,40 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 using namespace std;
 
+
+struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode() : val(0), left(nullptr), right(nullptr) {}
+      TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+      TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+  };
+
 class Solution {
-    public:
-    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n){
-        int mixed_tail = m+n-1;
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+            if (!root) return ans;
 
-        while(m>0 && n>0){
-            if (nums1[m-1] > nums2[n-1]){
-                nums1[mixed_tail] = nums1[m-1];
-                m--;
-                mixed_tail--;
+            stack<TreeNode *> s;
+            TreeNode *current = root;
+            while (current || !s.empty())
+            {
+                if (current){
+                    s.push(current);
+                    current = current->left;
+                }
+                else{
+                    TreeNode *node = s.top();
+                    s.pop();
+                    ans.push_back(node->val);
+                    current = node->right;
+                }
             }
-            else{
-                nums1[mixed_tail] = nums2[n-1];
-                n--;
-                mixed_tail--;
-            }                   
-        }   
-        while(m==0){
-            for (int i=0;i<n;i++){
-                nums1[i]=nums2[i];
-            }
-            break;
-        }    
-
+            return ans;
     }
 };
 
